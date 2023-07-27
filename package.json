@@ -1,0 +1,23 @@
+{
+  "name": "pc-plus",
+  "version": "1.0.0",
+  "description": "A Discord bot for Project Cloverfield",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bruneski/pc-plus.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bruneski/pc-plus/issues"
+  },
+  "homepage": "https://github.com/bruneski/pc-plus#readme",
+  "dependencies": {
+    "discord.js": "^14.11.0"
+  }
+}
