@@ -3,10 +3,6 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-console.log(process.env);
-
-const PORT = process.env.PORT;
-
 const client = new Client({
     intents: [
         IntentsBitField.Flags.Guilds,
