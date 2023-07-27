@@ -9,4 +9,4 @@ const client = new Client({
     ],
 });
 
-client.login('MTEzNDE4ODAyOTQ5MDI0NTY2Mg.G3V_jY.kscjAvvLt17m8aTWYl37EufgEkboWZV0iX2Eas');
+client.login('');
