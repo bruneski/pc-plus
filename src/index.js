@@ -18,7 +18,7 @@ client.on("messageCreate", (message) => {
     if(message.author.bot) {
         return;
     }
-    if(message.content.channel === "admin-chat") {
+    if(message.channel === "admin-chat") {
         console.log("Mentions", message.mentions);
     }
 });
