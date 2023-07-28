@@ -13,3 +13,12 @@ const client = new Client({
 });
 
 client.login(process.env.DISCORD_TOKEN);
+
+client.on("messageCreate", (message) => {
+    if(message.author.bot) {
+        return;
+    }
+    if(message.content.channel === "admin-chat") {
+        console.log("Mentions", message.mentions);
+    }
+});
