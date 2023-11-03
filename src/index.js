@@ -3,7 +3,6 @@ const dotenv = require('dotenv');
 const fs = require('node:fs');
 const path = require('node:path');
 
-
 dotenv.config();
 
 const client = new Client({
@@ -36,7 +35,7 @@ for (const folder of commandFolders) {
 client.login(process.env.DISCORD_TOKEN);
 
 client.on("messageCreate", (message) => {
-    console.log(message);
+    //console.log(message);
     if(message.author.bot) {
         return;
     }
@@ -48,15 +47,15 @@ client.on("messageCreate", (message) => {
 
     //#council-chat
     if(message.channelId === "351041119104139264") {
-        if(message.author.username === 'zalakan') {
-            message.reply("Did you know Zal was an Arena Master?");
-        }
-        if(message.author.username === 'grippingbeef') {
-            message.reply("Frank the Tank");
-        }
-        if(message.author.username === 'bruneski') {
-            message.reply("This guy has a lot of mounts");
-        }
+        // if(message.author.username === 'zalakan') {
+        //     message.reply("Did you know Zal was an Arena Master?");
+        // }
+        // if(message.author.username === 'grippingbeef') {
+        //     message.reply("Frank the Tank");
+        // }
+        // if(message.author.username === 'bruneski') {
+        //     message.reply("This guy has a lot of mounts");
+        // }
     }
 });
 
