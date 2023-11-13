@@ -1,4 +1,4 @@
-const gatherScores = async function(data, dest) {
+export async function gatherScores(data, dest) {
     await Promise.all(data.map( (m, index) => {
         console.log(`https://raider.io/api/v1/characters/profile?region=us&realm=mal-ganis&name=${encodeURI(m)}&fields=mythic_plus_scores_by_season:current`);
         return axios.get(`https://raider.io/api/v1/characters/profile?region=us&realm=mal-ganis&name=${encodeURI(m)}&fields=mythic_plus_scores_by_season:current`);
@@ -16,12 +16,3 @@ const gatherScores = async function(data, dest) {
         console.error("gatherScores() Error -> ", e.response.data.message);
     });
 }
-
-const util = {
-    return {
-        gatherScores
-    }
-
-}
-
-export default util;

@@ -35,12 +35,16 @@ module.exports = {
             const char = interaction.options.getString('character');
             console.log(char);
             if(!!char) {
-                await interaction.editReply(`Adding ${char}`);
-                //var writeStream = fs.createWriteStream("text.txt");
-                fs.appendFile("data/members.txt", `${char}\r\n` ,function(err){
-                    if(err) throw err;
-                    console.log('IS WRITTEN');
-                });
+                var roster = fs.readFileSync('data/members.txt','utf8').toString().split("\r\n");
+                if(!roster.includes(char)) {
+                    await interaction.editReply(`Adding ${char}`);
+                    fs.appendFile("data/members.txt", `${char}\r\n` ,function(err){
+                        if(err) throw err;
+                        console.log('IS WRITTEN');
+                    });
+                } else {
+                    await interaction.editReply(`Character already exists`);
+                }
             } else {
                 await interaction.editReply(`Something went wrong`);
             }

@@ -3,30 +3,22 @@ const { codeBlock } = require('discord.js');
 const RAIDERIO = require('../../src/service/raiderio.js');
 const axios = require('axios');
 const fs = require('fs');
-
-const paidRunners = [
-	"Atexcake",
-	"Icecarnage",
-	"Draths",
-	"Feikhal",
-	"Boyardaddy",
-	"Empyral",
-	"Yngnut",
-	"Kravick",
-	"Zalakan"
-]
+//const { util } = require('../../src/utilities/util.js');
 
 //var roster = fs.readFileSync('data/members.txt','utf8').toString().split("\r\n");
 //console.log(roster);
 
 const gatherScores = async function(data, dest) {
 	await Promise.all(data.map( (m, index) => {
-		console.log(`https://raider.io/api/v1/characters/profile?region=us&realm=mal-ganis&name=${encodeURI(m)}&fields=mythic_plus_scores_by_season:current`);
-		return axios.get(`https://raider.io/api/v1/characters/profile?region=us&realm=mal-ganis&name=${encodeURI(m)}&fields=mythic_plus_scores_by_season:current`);
+		console.log(m);
+		let array = [];
+		array = m.split('-');
+		let character = array[0];
+		let realm = !!array[1] ? array[1].replace("'", "-") : "mal-ganis";
+		console.log(`https://raider.io/api/v1/characters/profile?region=us&realm=${encodeURI(realm)}&name=${encodeURI(character)}&fields=mythic_plus_scores_by_season:current`);
+		return axios.get(`https://raider.io/api/v1/characters/profile?region=us&realm=${encodeURI(realm)}&name=${encodeURI(character)}&fields=mythic_plus_scores_by_season:current`);
 	})).then(raiders => {
-		//console.log("Payload", raiders);
 		raiders.map((record) => {
-			console.log("Record", record.data);
 			dest.push({
 				"name": record.data.name,
 				"score": record.data.mythic_plus_scores_by_season[0].scores.all
@@ -44,7 +36,7 @@ module.exports = {
 		.setDescription('Shows the top 5 in guild Raider.io scores for the current season'),
 	async execute(interaction) {
 		//Add/Remove {ephemeral: true} to make the response Private/Public
-		await interaction.deferReply({ ephemeral: true });
+		await interaction.deferReply();
 		let guildRes = await axios.get("https://raider.io/api/v1/guilds/profile?region=us&realm=mal-ganis&name=Project%20Cloverfield&fields=members");
 		console.log("Guild", guildRes.data);
 		let members = guildRes.data.members;
@@ -59,7 +51,6 @@ module.exports = {
 		//console.log("Competition Runners", mPlusNames);
 		var roster = fs.readFileSync('data/members.txt','utf8').toString().split("\r\n");
 		console.log("Roster", roster);
-		console.log("Paid Runners", paidRunners);
 		roster = roster.filter(item => item);1
 		let mPlusScores = [];
 		//TODO: Clean this statemtn up

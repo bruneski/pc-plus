@@ -6,12 +6,15 @@ const fs = require('fs');
 
 const gatherScores = async function(data, dest) {
 	await Promise.all(data.map( (m, index) => {
-		console.log(`https://raider.io/api/v1/characters/profile?region=us&realm=mal-ganis&name=${encodeURI(m)}&fields=mythic_plus_scores_by_season:current`);
-		return axios.get(`https://raider.io/api/v1/characters/profile?region=us&realm=mal-ganis&name=${encodeURI(m)}&fields=mythic_plus_scores_by_season:current`);
+		console.log(m);
+		let array = [];
+		array = m.split('-');
+		let character = array[0];
+		let realm = !!array[1] ? array[1].replace("'", "-") : "mal-ganis";
+		console.log(`https://raider.io/api/v1/characters/profile?region=us&realm=${encodeURI(realm)}&name=${encodeURI(character)}&fields=mythic_plus_scores_by_season:current`);
+		return axios.get(`https://raider.io/api/v1/characters/profile?region=us&realm=${encodeURI(realm)}&name=${encodeURI(character)}&fields=mythic_plus_scores_by_season:current`);
 	})).then(raiders => {
-		//console.log("Payload", raiders);
 		raiders.map((record) => {
-			console.log("Record", record.data);
 			dest.push({
 				"name": record.data.name,
 				"score": record.data.mythic_plus_scores_by_season[0].scores.all
@@ -33,7 +36,7 @@ module.exports = {
                 .setRequired(true)),
 	async execute(interaction) {
 		//Add/Remove {ephemeral: true} to make the response Private/Public
-		await interaction.deferReply({ ephemeral: true });
+		await interaction.deferReply();
         const num = interaction.options.getString('number');
         console.log(num);
         console.log(`Top(${num}) -> `, interaction);
