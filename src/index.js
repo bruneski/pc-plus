@@ -41,9 +41,9 @@ client.on("messageCreate", (message) => {
     }
 
     //#admin-chat
-    if(message.channelId === "222942645188558860") {
-        message.reply("I see you");
-    }
+    // if(message.channelId === "222942645188558860") {
+    //     message.reply("I see you");
+    // }
 
     //#council-chat
     if(message.channelId === "351041119104139264") {
