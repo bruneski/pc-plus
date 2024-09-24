@@ -25,7 +25,7 @@ const gatherScores = async function(data, dest) {
 		console.error("gatherScores() Error -> ", e.response.data.message);
 	});
 }
-
+//TODO: Fix this for the whole guild?
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('top')
@@ -75,6 +75,8 @@ module.exports = {
 		// 3. ${top5[2].name} | ${top5[2].score}
 		// 4. ${top5[3].name} | ${top5[3].score}
 		// 5. ${top5[4].name} | ${top5[4].score}`);
-		interaction.editReply(`These are the leaderboard results for the top ${num} members of ${guildRes.data.name}:\n` + codeblock);
+
+		//interaction.editReply(`These are the leaderboard results for the top ${num} members of ${guildRes.data.name}:\n` + codeblock);
+		interaction.editReply(`Please use the /rankings command instead`);
 	},
 };

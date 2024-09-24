@@ -51,9 +51,9 @@ module.exports = {
 		//console.log("Competition Runners", mPlusNames);
 		var roster = fs.readFileSync('data/members.txt','utf8').toString().split("\r\n");
 		console.log("Roster", roster);
-		roster = roster.filter(item => item);1
+		roster = roster.filter(item => item);
 		let mPlusScores = [];
-		//TODO: Clean this statemtn up
+		//TODO: Clean this statement up
 		let curatedData = await gatherScores(roster, mPlusScores);
 		console.log("Competition Runners Raw", mPlusScores);
 		//Sorting only top 5 scores
@@ -65,6 +65,8 @@ module.exports = {
 		3. ${top5[2].name} | ${top5[2].score}
 		4. ${top5[3].name} | ${top5[3].score}
 		5. ${top5[4].name} | ${top5[4].score}`);
-		interaction.editReply(`These are the leaderboard results for the top 5 members of ${guildRes.data.name}:\n` + codeblock);
+		//interaction.editReply(`These are the leaderboard results for the top 5 members of ${guildRes.data.name}:\n` + codeblock);
+		interaction.editReply(`Please use /rankings instead`);
+
 	},
 };
