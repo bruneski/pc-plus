@@ -122,6 +122,7 @@ module.exports = {
 		.setDescription('Shows the rankings for each team in the current M+ competition'),
 	async execute(interaction) {
 		//Add/Remove {ephemeral: true} to make the response Private/Public
+		await interaction.deferReply();
 		var roster = fs.readFileSync('data/members.txt','utf8').toString().split("\r\n");
 		let rosterFiltered;
 		console.log("Roster", roster);
@@ -178,6 +179,6 @@ module.exports = {
 		.setTimestamp()
 		.setFooter({ text: 'Written by Ice'});
 
-		interaction.reply({ embeds: [ exampleEmbed ] });
+		interaction.editReply({ embeds: [ exampleEmbed ] });
 	},
 };
