@@ -9,10 +9,10 @@ const fs = require('fs');
 //console.log(roster);
 
 let teamNames = [
-	"Team 1",
+	"Ice Creamers",
 	"Team 2",
-	"Team 3",
-	"Team 4"
+	"Total Iceholes",
+	"parsley.gg"
 ]
 
 const gatherScores = async function(data, dest) {
@@ -144,7 +144,7 @@ module.exports = {
 
 		const exampleEmbed = new EmbedBuilder()
 		.setColor(0x0099FF)
-		.setTitle('TWW Season 1 M+ Competition Rankings')
+		.setTitle('TWW Season 2 M+ Competition Rankings')
 		.setURL('https://discord.gg/project-cloverfield')
 		.setAuthor({ name: 'PC Plus', iconURL: 'https://static.wikia.nocookie.net/cloverfield/images/f/fb/Slusho.png/revision/latest?cb=20080717173250', url: 'http://www.matthewrbrune.com' })
 		.setDescription('These are the current scores of the M+ teams')
