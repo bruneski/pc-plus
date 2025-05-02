@@ -9,13 +9,10 @@ const fs = require('fs');
 //console.log(roster);
 
 let teamNames = [
-	"□□□□□□□□□□□□□□□□",
-	"Poopy Buttholes",
-	"Get Rabid",
-	"Fuck It, We Brawl",
-	"ManBearLiz",
-	"Beefcake Brigade",
-	"Light Between the Eyes"
+	"Team 1",
+	"Team 2",
+	"Team 3",
+	"Team 4"
 ]
 
 const gatherScores = async function(data, dest) {
@@ -31,7 +28,7 @@ const gatherScores = async function(data, dest) {
 	})).then(raiders => {
 		//console.log("RaiderIO Data -> ", raiders);
 		raiders.map((record) => {
-			console.log("Raider Record", record.data);
+			//console.log("Raider Record", record.data);
 			dest.push({
 				"name": record.data.name,
 				"score": record.data.mythic_plus_scores_by_season[0].scores.all
@@ -49,11 +46,11 @@ const gatherTeamScores = async function(data, dest) {
 	data.forEach((team, index) => {
 		console.log("Team", team);
 		team.forEach((player) => {
-			console.log("Query pass", player);
+			//console.log("Query pass", player);
 			let array = [];
 			array = player.split('-');
 			let character = array[0];
-			let realm = !!array[1] ? array[1].replace("'", "-") : "mal-ganis";
+			let realm = !!array[1] ? array[1].replace(/'/g, '-') : "mal-ganis";
 			console.log(`https://raider.io/api/v1/characters/profile?region=us&realm=${encodeURI(realm)}&name=${encodeURI(character)}&fields=mythic_plus_scores_by_season:current`);
 			requests.push(
 				new Promise((resolve, reject) => {
@@ -74,7 +71,6 @@ const gatherTeamScores = async function(data, dest) {
 	})
 	console.log("Requests -> ", requests);
 	const result = await Promise.all(requests);
-	console.log("Final Result", dest);
 	return dest;
 }
 
@@ -95,25 +91,17 @@ const calculateTeams = function(teams) {
 		}, {})
 	  ).map(([team, players]) => ({ team, players }));
 
-	console.log(sanitizedTeams);
+	//console.log("Grouped Teams", sanitizedTeams);
 	sanitizedTeams.map((team, index) => {
 		let numPlayers = team.players.length;
-		console.log(team.players);
-		console.log(team.players.length);
+		console.log("Grouped Teams", team.players);
 		team.total = team.players.reduce((n, {score}) => n + score, 0);
 		team.average = team.total / numPlayers;
 		team.title = teamNames[index];
 		team.roster = team.players.reduce((n, {name}) => n + "\n" + name, "");
-		// let totalScore = (team.players).reduce(acc, score => {})
-		// })
-		// team.score = totalScore / numPlayers;
 	});
 
 	return sanitizedTeams.sort((a,b) => a.team - b.team);
-
-	// return teams.map(player => {
-	// 	console.log("calculateTeams() -> ", player);
-	// })
 }
 
 module.exports = {
@@ -122,8 +110,12 @@ module.exports = {
 		.setDescription('Shows the rankings for each team in the current M+ competition'),
 	async execute(interaction) {
 		//Add/Remove {ephemeral: true} to make the response Private/Public
-		await interaction.deferReply();
-		var roster = fs.readFileSync('data/members.txt','utf8').toString().split("\r\n");
+		await interaction.deferReply({ephemeral: true});
+		var roster = fs.readFileSync('data/members.txt','utf8', (err, data) => {
+			console.log("File Data", data.toString());
+			return data.toString();
+		})
+		roster = roster.split('\n').map(line => line.replace('\r', ''));
 		let rosterFiltered;
 		console.log("Roster", roster);
 		rosterFiltered = roster.map(item => {
@@ -135,12 +127,7 @@ module.exports = {
 		let mPlusScores =[];
 		//TODO: Clean this statement up
 		let curatedData = await gatherTeamScores(rosterFiltered, mPlusScores)
-		// rosterFiltered.forEach((team) => {
-		// 	gatherScores(team, mPlusScores);
-		// 	console.log("ForEach Scores -> ", mPlusScores);
-		// })
-		console.log("Raw M+ Data", mPlusScores);
-		console.log("Curated Scores -> ", curatedData);
+		console.log("Individual Scores -> ", curatedData);
 		let teamData = calculateTeams(curatedData);
 		console.log("M+ Teams -> ", teamData);
 		// let teamBreakdownJSON = teamData.map(team => {
@@ -149,23 +136,12 @@ module.exports = {
 		let embedFormat = teamData.map(team => {
 			return {
 				name: team.title,
-				value: team.average.toFixed(2) + "\n"+ team.roster,
+				value: `${team.average.toFixed(2)}` + "\n"+ team.roster,
 				inline: true
 			}
 		})
-		console.log('Embed Format', embedFormat);
+		console.log('Embed Data', embedFormat);
 
-		//Sorting only top 5 scores
-		//let top5 = mPlusScores.sort((a,b) => b.score-a.score).slice(0,5);
-		// console.log("Leaderboard", top5);
-		// const codeblock = codeBlock(`
-		// 1. ${top5[0].name} | ${top5[0].score}
-		// 2. ${top5[1].name} | ${top5[1].score}
-		// 3. ${top5[2].name} | ${top5[2].score}
-		// 4. ${top5[3].name} | ${top5[3].score}
-		// 5. ${top5[4].name} | ${top5[4].score}`);
-		// interaction.editReply(`These are the leaderboard results for the top 5 members of ${guildRes.data.name}:\n` + codeblock);
-		// inside a command, event listener, etc.
 		const exampleEmbed = new EmbedBuilder()
 		.setColor(0x0099FF)
 		.setTitle('TWW Season 1 M+ Competition Rankings')
@@ -179,6 +155,6 @@ module.exports = {
 		.setTimestamp()
 		.setFooter({ text: 'Written by Ice'});
 
-		interaction.editReply({ embeds: [ exampleEmbed ] });
+		interaction.editReply({ embeds: [ exampleEmbed ]});
 	},
 };

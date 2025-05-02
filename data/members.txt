@@ -1,7 +1,4 @@
-Creamdragon,Mxmtoon,Kayse
-Darenitous,Smarlock-Sargeras,Masague
-Empyral,Rinzsler,Krisys
-Hypnomaas,Sulogrip,Whisperhunt
-Fknsus,Leggomyecho,Arcs
-Hambranch,Zalami,Anggus
-Pallyphenom,Moncar-Sargeras,Ezactly-Sargeras
+Iceicebaaby,Longslab,Hotdogroller,Ravice
+Metrorogue,Chasteice,Zalaice,Ricebath
+Icebirt,Imadragon,Icelice,Maleficence-the'venture'co
+Whisperash,Iceslegs,Hepaticeis,Suloarms
