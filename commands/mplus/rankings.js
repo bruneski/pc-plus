@@ -3,14 +3,47 @@ const { codeBlock, EmbedBuilder } = require('discord.js');
 const RAIDERIO = require('../../src/service/raiderio.js');
 const axios = require('axios');
 const fs = require('fs');
+const winston = require('winston');
+const { combine, timestamp, json } = winston.format;
 //const { util } = require('../../src/utilities/util.js');
 
 //var roster = fs.readFileSync('data/members.txt','utf8').toString().split("\r\n");
-//console.log(roster);
+
+const LOG_FORMAT = winston.format.combine(
+    winston.format.align(),
+    winston.format.timestamp({format:'DD-MM-YYYY T hh:mm:ss.sss A'}),
+    
+    winston.format.printf(({ level, message, timestamp, label }) => {
+        return `[ ${level.toUpperCase()} | ${timestamp} | ${message} ]`;
+    }));
+
+const logger = winston.createLogger({
+	// level: 'info',
+	// format: combine(
+	// 	winston.format.timestamp({format: 'YYYY-MM-DD HH:mm:ss'}),
+	// 	winston.format.prettyPrint(),
+	// 	winston.format.colorize(),
+	// 	json()
+	// ),
+	format: LOG_FORMAT,
+	defaultMeta: { service: '/rankings' },
+	transports: [
+	  //
+	  // - Write all logs with importance level of `error` or higher to `error.log`
+	  //   (i.e., error, fatal, but not other levels)
+	  //
+	  new winston.transports.File({ filename: './logs/error.log', level: 'error' }),
+	  //
+	  // - Write all logs with importance level of `info` or higher to `combined.log`
+	  //   (i.e., fatal, error, warn, and info, but not trace)
+	  //
+	  new winston.transports.File({ filename: `./logs/combined.log` }),
+	],
+  });
 
 let teamNames = [
 	"Ice Creamers",
-	"Team 2",
+	"Glace",
 	"Total Iceholes",
 	"parsley.gg"
 ]
@@ -18,7 +51,6 @@ let teamNames = [
 const gatherScores = async function(data, dest) {
 	console.log("gatherScores() -> ", data);
 	await Promise.all(data.map((m, index) => {
-			console.log("Query pass", m);
 			let array = [];
 			array = m.split('-');
 			let character = array[0];
@@ -51,7 +83,7 @@ const gatherTeamScores = async function(data, dest) {
 			array = player.split('-');
 			let character = array[0];
 			let realm = !!array[1] ? array[1].replace(/'/g, '-') : "mal-ganis";
-			console.log(`https://raider.io/api/v1/characters/profile?region=us&realm=${encodeURI(realm)}&name=${encodeURI(character)}&fields=mythic_plus_scores_by_season:current`);
+			logger.info(`https://raider.io/api/v1/characters/profile?region=us&realm=${encodeURI(realm)}&name=${encodeURI(character)}&fields=mythic_plus_scores_by_season:current`);
 			requests.push(
 				new Promise((resolve, reject) => {
 				axios.get(`https://raider.io/api/v1/characters/profile?region=us&realm=${encodeURI(realm)}&name=${encodeURI(character)}&fields=mythic_plus_scores_by_season:current`)
@@ -63,13 +95,15 @@ const gatherTeamScores = async function(data, dest) {
 					})
 					return response.data;
 				}).then((data) => {
+					logger.info(`gatherTeamScores() -> ${JSON.stringify(data)}`);
 					resolve(data);
+				}).catch((err) => {
+					logger.error(`gatherTeamScores() -> ${err}`)
 				});
 			})
 			)
 		})
 	})
-	console.log("Requests -> ", requests);
 	const result = await Promise.all(requests);
 	return dest;
 }
@@ -110,7 +144,7 @@ module.exports = {
 		.setDescription('Shows the rankings for each team in the current M+ competition'),
 	async execute(interaction) {
 		//Add/Remove {ephemeral: true} from deferReply() to make the response Private/Public
-		await interaction.deferReply();
+		await interaction.deferReply({ephemeral: true});
 		var roster = fs.readFileSync('data/members.txt','utf8', (err, data) => {
 			console.log("File Data", data.toString());
 			return data.toString();
