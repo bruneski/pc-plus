@@ -143,8 +143,9 @@ module.exports = {
 		.setName('rankings')
 		.setDescription('Shows the rankings for each team in the current M+ competition'),
 	async execute(interaction) {
+		//TODO: Make this a configuration
 		//Add/Remove {ephemeral: true} from deferReply() to make the response Private/Public
-		await interaction.deferReply({ephemeral: true});
+		await interaction.deferReply();
 		var roster = fs.readFileSync('data/members.txt','utf8', (err, data) => {
 			console.log("File Data", data.toString());
 			return data.toString();
