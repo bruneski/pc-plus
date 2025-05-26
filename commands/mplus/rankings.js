@@ -132,7 +132,7 @@ const calculateTeams = function(teams) {
 		team.total = team.players.reduce((n, {score}) => n + score, 0);
 		team.average = team.total / numPlayers;
 		team.title = teamNames[index];
-		team.roster = team.players.reduce((n, {name}) => n + "\n" + name, "");
+		team.roster = team.players.reduce((n, {name, score}) => n + "\n" + name + " - " + score, "");
 	});
 
 	return sanitizedTeams.sort((a,b) => a.team - b.team);
